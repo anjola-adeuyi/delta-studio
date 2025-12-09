@@ -4,7 +4,7 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
-![React](https://img.shields.io/badge/React-18-61dafb)
+![React](https://img.shields.io/badge/React-19-61dafb)
 
 ## Overview
 
