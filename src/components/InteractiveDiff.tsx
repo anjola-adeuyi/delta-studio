@@ -13,6 +13,10 @@ interface InteractiveDiffProps {
  * Level 2: Interactive Diff Component
  * Main component that orchestrates the accept/reject workflow
  * Combines ChangeCard list with PreviewPanel
+ * Provides batch action buttons: Accept All, Reject All, Reset
+ * @param original - The original HTML content
+ * @param modified - The modified HTML content
+ * @returns The InteractiveDiff component
  */
 export function InteractiveDiff({ original, modified }: InteractiveDiffProps) {
   const {
@@ -29,20 +33,20 @@ export function InteractiveDiff({ original, modified }: InteractiveDiffProps) {
 
   return (
     <div>
-      {/* Batch Actions Bar */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-6">
+      {/* Batch Actions */}
+      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm shadow-gray-200/50 p-4 sm:p-5 mb-5 sm:mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="font-semibold text-gray-900">
+            <h2 className="font-bold text-gray-900 flex items-center gap-2">
               Review Changes
-              <span className="ml-2 text-sm font-normal text-gray-500">
-                ({changes.length} total)
-              </span>
+              <span className="text-sm font-normal text-gray-400">({changes.length})</span>
             </h2>
-            <p className="text-sm text-gray-500 mt-0.5">
-              {isComplete
-                ? 'All changes reviewed!'
-                : `${stats.pending} change${stats.pending !== 1 ? 's' : ''} pending review`}
+            <p className="text-sm text-gray-500 mt-1">
+              {isComplete ? (
+                <span className="text-emerald-600 font-medium">All changes reviewed!</span>
+              ) : (
+                <>{stats.pending} pending review</>
+              )}
             </p>
           </div>
 
@@ -51,76 +55,78 @@ export function InteractiveDiff({ original, modified }: InteractiveDiffProps) {
             <button
               onClick={acceptAll}
               disabled={stats.pending === 0 && stats.rejected === 0}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-500 text-white rounded-lg font-medium text-sm hover:bg-green-600 active:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-500 text-white rounded-xl font-semibold text-sm hover:bg-emerald-600 active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-emerald-500 shadow-md shadow-emerald-500/20 hover:shadow-lg"
             >
               <svg
                 className="w-4 h-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                strokeWidth={2.5}
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              Accept All
+              <span className="hidden sm:inline">Accept All</span>
+              <span className="sm:hidden">All</span>
             </button>
 
             <button
               onClick={rejectAll}
               disabled={stats.pending === 0 && stats.accepted === 0}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-500 text-white rounded-lg font-medium text-sm hover:bg-red-600 active:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-500 text-white rounded-xl font-semibold text-sm hover:bg-rose-600 active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-rose-500 shadow-md shadow-rose-500/20 hover:shadow-lg"
             >
               <svg
                 className="w-4 h-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                strokeWidth={2.5}
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-              Reject All
+              <span className="hidden sm:inline">Reject All</span>
+              <span className="sm:hidden">None</span>
             </button>
 
             <button
               onClick={resetChanges}
               disabled={stats.pending === changes.length}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium text-sm hover:bg-gray-200 active:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-200 active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed ring-1 ring-gray-200"
             >
               <svg
                 className="w-4 h-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                strokeWidth={2}
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 />
               </svg>
-              Reset
+              <span className="hidden sm:inline">Reset</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
         {/* Changes List (2/3 width on desktop) */}
-        <div className="lg:col-span-2 space-y-1">
+        <div className="lg:col-span-2">
           {changes.length === 0 ? (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+            <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-8 sm:p-12 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gray-100 flex items-center justify-center">
                 <svg
                   className="w-8 h-8 text-gray-400"
                   fill="none"
@@ -135,29 +141,30 @@ export function InteractiveDiff({ original, modified }: InteractiveDiffProps) {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                No Changes Detected
-              </h3>
-              <p className="text-gray-500">
-                The original and modified documents are identical.
-              </p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">No Changes</h3>
+              <p className="text-gray-500 text-sm">Documents are identical.</p>
             </div>
           ) : (
-            changes.map((change, index) => (
-              <ChangeCard
-                key={change.id}
-                change={change}
-                onAccept={acceptChange}
-                onReject={rejectChange}
-                index={index}
-              />
-            ))
+            <div className="space-y-0">
+              {changes.map((change, index) => (
+                <ChangeCard
+                  key={change.id}
+                  change={change}
+                  onAccept={acceptChange}
+                  onReject={rejectChange}
+                  index={index}
+                />
+              ))}
+            </div>
           )}
         </div>
 
         {/* Preview Panel (1/3 width on desktop) */}
         <div>
-          <PreviewPanel html={finalResult} stats={stats} />
+          <PreviewPanel
+            html={finalResult}
+            stats={stats}
+          />
         </div>
       </div>
     </div>
@@ -165,4 +172,3 @@ export function InteractiveDiff({ original, modified }: InteractiveDiffProps) {
 }
 
 export default InteractiveDiff;
-

@@ -14,48 +14,45 @@ interface ChangeCardProps {
 /**
  * Displays a single change with before/after comparison and accept/reject buttons
  * This is the core UX component for Level 2 interactive diff
+ * @param change - The change to display
+ * @param onAccept - Callback when user accepts the change
+ * @param onReject - Callback when user rejects the change
+ * @param index - Optional: index for display purposes
  */
-export function ChangeCard({
-  change,
-  onAccept,
-  onReject,
-  index,
-}: ChangeCardProps) {
+export function ChangeCard({ change, onAccept, onReject, index }: ChangeCardProps) {
   const isAccepted = change.accepted === true;
   const isRejected = change.accepted === false;
   const isPending = change.accepted === null;
 
   // Determine card styling based on state
   const cardStyles = isAccepted
-    ? 'bg-green-50 border-green-300 shadow-green-100'
+    ? 'bg-emerald-50/70 border-emerald-200 ring-1 ring-emerald-100'
     : isRejected
-      ? 'bg-red-50 border-red-300 shadow-red-100'
-      : 'bg-white border-gray-200 hover:border-gray-300 shadow-sm hover:shadow';
+    ? 'bg-rose-50/70 border-rose-200 ring-1 ring-rose-100'
+    : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-md';
 
   // Type badge styling
   const typeBadgeStyles = {
-    added: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    removed: 'bg-rose-100 text-rose-700 border-rose-200',
-    modified: 'bg-amber-100 text-amber-700 border-amber-200',
+    added: 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200',
+    removed: 'bg-rose-100 text-rose-700 ring-1 ring-rose-200',
+    modified: 'bg-amber-100 text-amber-700 ring-1 ring-amber-200',
   };
 
   return (
     <div
-      className={`border rounded-xl p-5 mb-4 transition-all duration-200 ${cardStyles}`}
+      className={`border rounded-2xl p-4 sm:p-5 mb-3 sm:mb-4 transition-all duration-300 ease-out shadow-sm ${cardStyles}`}
     >
-      {/* Header Row */}
+      {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Change number */}
-          {index !== undefined && (
-            <span className="text-xs font-medium text-gray-400">
-              #{index + 1}
-            </span>
-          )}
+          {index !== undefined && <span className="text-xs font-bold text-gray-300 tabular-nums">#{index + 1}</span>}
 
           {/* Type badge */}
           <span
-            className={`text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full border ${typeBadgeStyles[change.type]}`}
+            className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg ${
+              typeBadgeStyles[change.type]
+            }`}
           >
             {change.type}
           </span>
@@ -64,25 +61,21 @@ export function ChangeCard({
         {/* Status badge */}
         {!isPending && (
           <span
-            className={`text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5 ${
-              isAccepted
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
+            className={`text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-200 ${
+              isAccepted ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
             }`}
           >
             {isAccepted ? (
               <>
                 <svg
                   className="w-3.5 h-3.5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2.5}
-                    d="M5 13l4 4L19 7"
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
                   />
                 </svg>
                 Accepted
@@ -91,15 +84,13 @@ export function ChangeCard({
               <>
                 <svg
                   className="w-3.5 h-3.5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2.5}
-                    d="M6 18L18 6M6 6l12 12"
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
                   />
                 </svg>
                 Rejected
@@ -109,18 +100,18 @@ export function ChangeCard({
         )}
       </div>
 
-      {/* Before/After Comparison */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+      {/* Before/After */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-5">
         {/* Before (Original) */}
-        <div>
-          <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-red-400" />
+        <div className="group">
+          <h4 className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-400 group-hover:scale-125 transition-transform" />
             Before
           </h4>
           <div
-            className={`font-mono text-sm p-3 rounded-lg border overflow-x-auto whitespace-pre-wrap break-words ${
+            className={`font-mono text-xs sm:text-sm p-3 sm:p-4 rounded-xl border transition-all duration-200 min-h-[60px] overflow-x-auto whitespace-pre-wrap break-words ${
               change.original
-                ? 'bg-red-50/50 border-red-200 text-gray-800'
+                ? 'bg-rose-50/50 border-rose-200/80 text-gray-800 group-hover:bg-rose-50'
                 : 'bg-gray-50 border-gray-200 text-gray-400 italic'
             }`}
           >
@@ -129,15 +120,15 @@ export function ChangeCard({
         </div>
 
         {/* After (Modified) */}
-        <div>
-          <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-green-400" />
+        <div className="group">
+          <h4 className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 group-hover:scale-125 transition-transform" />
             After
           </h4>
           <div
-            className={`font-mono text-sm p-3 rounded-lg border overflow-x-auto whitespace-pre-wrap break-words ${
+            className={`font-mono text-xs sm:text-sm p-3 sm:p-4 rounded-xl border transition-all duration-200 min-h-[60px] overflow-x-auto whitespace-pre-wrap break-words ${
               change.modified
-                ? 'bg-green-50/50 border-green-200 text-gray-800'
+                ? 'bg-emerald-50/50 border-emerald-200/80 text-gray-800 group-hover:bg-emerald-50'
                 : 'bg-gray-50 border-gray-200 text-gray-400 italic'
             }`}
           >
@@ -147,97 +138,55 @@ export function ChangeCard({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3">
+      <div className="flex gap-2 sm:gap-3">
         <button
           onClick={() => onAccept(change.id)}
           disabled={isAccepted}
-          className={`flex-1 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-150 flex items-center justify-center gap-2 ${
+          className={`flex-1 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 ${
             isAccepted
-              ? 'bg-green-200 text-green-800 cursor-default'
-              : 'bg-green-500 text-white hover:bg-green-600 active:bg-green-700 shadow-sm hover:shadow'
+              ? 'bg-emerald-100 text-emerald-700 cursor-default'
+              : 'bg-emerald-500 text-white hover:bg-emerald-600 active:scale-[0.98] shadow-md shadow-emerald-500/25 hover:shadow-lg hover:shadow-emerald-500/30'
           }`}
         >
-          {isAccepted ? (
-            <>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              Accepted
-            </>
-          ) : (
-            <>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              Accept
-            </>
-          )}
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          <span className="hidden sm:inline">{isAccepted ? 'Accepted' : 'Accept'}</span>
         </button>
 
         <button
           onClick={() => onReject(change.id)}
           disabled={isRejected}
-          className={`flex-1 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-150 flex items-center justify-center gap-2 ${
+          className={`flex-1 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 ${
             isRejected
-              ? 'bg-red-200 text-red-800 cursor-default'
-              : 'bg-red-500 text-white hover:bg-red-600 active:bg-red-700 shadow-sm hover:shadow'
+              ? 'bg-rose-100 text-rose-700 cursor-default'
+              : 'bg-rose-500 text-white hover:bg-rose-600 active:scale-[0.98] shadow-md shadow-rose-500/25 hover:shadow-lg hover:shadow-rose-500/30'
           }`}
         >
-          {isRejected ? (
-            <>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              Rejected
-            </>
-          ) : (
-            <>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              Reject
-            </>
-          )}
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+          <span className="hidden sm:inline">{isRejected ? 'Rejected' : 'Reject'}</span>
         </button>
       </div>
     </div>
@@ -245,4 +194,3 @@ export function ChangeCard({
 }
 
 export default ChangeCard;
-
