@@ -104,4 +104,3 @@ export const testCases: HTMLComparison[] = [
 ];
 
 export default testCases;
-
