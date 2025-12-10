@@ -95,7 +95,7 @@ export function PreviewPanel({ html, stats }: PreviewPanelProps) {
         <div className="p-3 sm:p-4">
           <div className="bg-gray-50 rounded-xl border border-gray-200/80 p-3 sm:p-4 max-h-72 overflow-auto">
             {html ? (
-              <pre className="text-xs sm:text-sm font-mono whitespace-pre-wrap break-words text-gray-700 leading-relaxed">
+              <pre className="text-xs sm:text-sm font-mono whitespace-pre-wrap wrap-break-word text-gray-700 leading-relaxed">
                 {html}
               </pre>
             ) : (

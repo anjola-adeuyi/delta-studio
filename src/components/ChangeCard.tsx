@@ -109,7 +109,7 @@ export function ChangeCard({ change, onAccept, onReject, index }: ChangeCardProp
             Before
           </h4>
           <div
-            className={`font-mono text-xs sm:text-sm p-3 sm:p-4 rounded-xl border transition-all duration-200 min-h-[60px] overflow-x-auto whitespace-pre-wrap break-words ${
+            className={`font-mono text-xs sm:text-sm p-3 sm:p-4 rounded-xl border transition-all duration-200 min-h-[60px] overflow-x-auto whitespace-pre-wrap wrap-break-word ${
               change.original
                 ? 'bg-rose-50/50 border-rose-200/80 text-gray-800 group-hover:bg-rose-50'
                 : 'bg-gray-50 border-gray-200 text-gray-400 italic'
@@ -126,7 +126,7 @@ export function ChangeCard({ change, onAccept, onReject, index }: ChangeCardProp
             After
           </h4>
           <div
-            className={`font-mono text-xs sm:text-sm p-3 sm:p-4 rounded-xl border transition-all duration-200 min-h-[60px] overflow-x-auto whitespace-pre-wrap break-words ${
+            className={`font-mono text-xs sm:text-sm p-3 sm:p-4 rounded-xl border transition-all duration-200 min-h-[60px] overflow-x-auto whitespace-pre-wrap wrap-break-word ${
               change.modified
                 ? 'bg-emerald-50/50 border-emerald-200/80 text-gray-800 group-hover:bg-emerald-50'
                 : 'bg-gray-50 border-gray-200 text-gray-400 italic'
